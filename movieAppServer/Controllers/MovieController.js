@@ -8,7 +8,7 @@ const postMovie = async (request, response) => {
       if (searchedMovie) {
         return response
           .status(400)
-          .json({ message: "this movie already exist" });
+          .json({ message: "this addedID already exist" });
       }
       const newMovie = await new MovieList({
         addedID: movie.addedID,
@@ -24,6 +24,41 @@ const postMovie = async (request, response) => {
       response.status(500).json({ error: "This movie does not exist" });
     }
   };
+
+  //update a movie 
+  //I need request.params;
+  //I need request.body;
+  
+   const updateMovie=async(request,response)=>{
+    const id =request.params.id
+    const newMovie=request.body
+ try {
+     const updatedMovie =await MovieList.findByIdAndUpdate(id,{...newMovie},{new:true})
+     response.status(200).json({movie:updatedMovie})
+ } catch (error) {
+     response.status(500).json({error:'update failed'})
+ }
+} 
+
+//const updateMovie = async(req,res) =>{
+  //try {
+    /* first we need to find the movie: */
+    //const findMovie= await MovieList.findById(req.params.id)
+      /* tehn we assign the body request: */
+    //Object.assign(findMovie, req.body)
+       /* we save what we wrote in the body before to send the response */
+    //findMovie.save()
+    //res.send({data: findMovie})
+  //} catch (error) {
+    //res.status(500).json({error:'update failed'})
+ // }
+//}
+
+
+
+
+
+
   //get request
   //no need to teh request body
   //no nee to request.paramps
@@ -31,8 +66,6 @@ const postMovie = async (request, response) => {
     try {
       const movies = await MovieList.find();
       console.log('found all movies')
-      
-      return response.status(200).json({ movies: movies });
     } catch (error) {
         console.log('failed')
       response.status(500).json({ error: "failed to get all movies" });
@@ -51,21 +84,8 @@ const postMovie = async (request, response) => {
       response.status(500).json({ error: "delete has been  failed" });
     }
   };
-  //update a movie 
-  //I need request.params;
-  //I need request.body;
-  const updateMovie=async(request,response)=>{
-      const id =request.params.id
-      const newMovie=request.body
-   try {
-       const updatedMovie =await MovieList.findByIdAndUpdate(id,newMovie,{new:true})
-       response.status(200).json({movie:updatedMovie})
-   } catch (error) {
-       response.status(500).json({error:'update failed'})
-   }
-  }
-  //get one specefic movie
-  //I need request.params
+
+  //get one movie by ID
   const getOneMovie=async(request,response)=>{
       const id =request.params.id
       try {
@@ -79,14 +99,41 @@ const postMovie = async (request, response) => {
 
   //get one specefic movie by using addedID
   const geOneMovieAddedID=async(request,response)=>{
-  
+    const id =request.params.addedID
+    console.log(id)
     try {
-        const movieFound=await MovieList.findOne(request.params.addedID);
+        const movieFound=await MovieList.findOne({addedID:id});
         response.status(200).json({movie:movieFound})
 
     } catch (error) {
-        response.status(500).json({error:'failed to get the movie'})
+      console.log('hello failed')
+        response.status(500).json({error:'failed to get a movie by addedID'})
     }
 }
 
-module.exports = { postMovie,getAllMovies,deleteMovie,updateMovie,getOneMovie,geOneMovieAddedID}
+//get a movie by titile
+ const geOneMovieTitle=async(request,response)=>{
+    const title =request.params.title
+    try {
+        const movieFound=await MovieList.findOne({title:title});
+        response.status(200).json({movie:movieFound})
+    } catch (error) {
+      console.log('hello failed')
+        response.status(500).json({error:'failed to get a movie by title'})
+    }
+}
+
+
+//(POST)search a movie by title
+const searchMovie=async(request,response)=>{
+  const search=request.body;
+  try {
+      const movies =await MovieList.find();
+      const filteredMovies= await movies.filter((elt)=>elt.title.toLowerCase().includes(request.body.search))
+      response.status(200).json({movies:filteredMovies})
+  } catch (error) {
+      console.log(error)
+  }
+}
+ 
+module.exports = { postMovie,getAllMovies,deleteMovie,updateMovie,getOneMovie,geOneMovieAddedID, geOneMovieTitle, searchMovie }

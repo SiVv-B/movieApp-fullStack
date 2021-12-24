@@ -1,4 +1,4 @@
-const initilState = { movies: [], newMovie: {}, errors: null, loading: false }
+const initilState = { movies: [], newMovie: {}, oneMovie:{}, editMovie:{}, errors: null, loading: false }
 const Reducer = (state = initilState, action) => {
   switch (action.type) {
     case 'GET_ALL_MOVIES':
@@ -6,9 +6,12 @@ const Reducer = (state = initilState, action) => {
 
     case 'GET_MOVIES_FAIL':
       return { ...state, errors: action.payload }
-
     case 'ADD_MOVIE':
       return { ...state, newMovie: action.payload }
+      case 'SINGLE_MOVIE':
+        return {...state, oneMovie: action.payload}
+        case 'EDIT_MOVIE' :
+          return {...state,editMovie:action.payload} 
 
 
     default:

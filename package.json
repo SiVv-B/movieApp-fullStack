@@ -5,6 +5,7 @@
     "start": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
-    "concurrently": "^6.5.1"
+    "concurrently": "^6.5.1",
+    "react-player": "^2.9.0"
   }
 }

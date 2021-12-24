@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 //model of the movie list 
 const movieSchema = mongoose.Schema({
-    addedID: {
-        type:Number,
-        required:true,
-    },
+    addedID:Number, 
     title: String,
     poster: String,
     year:Number,
